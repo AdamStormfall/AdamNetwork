@@ -1,5 +1,5 @@
 # AdamNetwork
-A wrapper for Roblox "Network" classes.
+A wrapper for Roblox: "Network" classes.
 
 * General API:
 
