@@ -103,9 +103,9 @@ function AdamNetwork:FireEvent(EventName : string, ...)
 		local Event = Events[EventName]
 		
 		if RunService:IsServer() then
-			Event:FireServer(...)
-		else
 			Event:FireClient(...)
+		else
+			Event:FireServer(...)
 		end
 	end
 end
@@ -115,9 +115,9 @@ function AdamNetwork:InvokeFunction(FunctionName : string, ...)
 		local RemoteFunction = Functions[FunctionName]
 		
 		if RunService:IsServer() then
-			RemoteFunction:InvokeServer(...)
-		else
 			RemoteFunction:InvokeClient(...)
+		else
+			RemoteFunction:InvokeServer(...)
 		end
 	end
 end
