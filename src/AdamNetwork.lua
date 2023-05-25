@@ -47,31 +47,30 @@ local AdamNetwork = {}
 AdamNetwork.__index = AdamNetwork
 
 local RunService = game:GetService("RunService")
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Communication, FunctionsFolder, EventsFolder
+local Networking, Functions, Events
 
 if RunService:IsServer() then
-	Communication = Instance.new("Folder",ReplicatedStorage)
-	Communication.Name = "Communication"
+	Networking = Instance.new("Folder", ReplicatedStorage)
+	Networking.Name = "Networking"
 	
-	FunctionsFolder = Instance.new("Folder",Communication)
-	FunctionsFolder.Name = "Functions"
+	Functions = Instance.new("Folder", Networking)
+	Functions.Name = "Functions"
 	
-	EventsFolder = Instance.new("Folder",Communication)
-	EventsFolder.Name = "Events"
+	Events = Instance.new("Folder", Networking)
+	Events.Name = "Events"
 else
-	Communication = ReplicatedStorage:WaitForChild("Communication")
-	FunctionsFolder = Communication:WaitForChild("Functions")
-	EventsFolder = Communication:WaitForChild("Events")
+	Networking = ReplicatedStorage:WaitForChild("Networking")
+	Functions = Networking:WaitForChild("Functions")
+	Events = Networking:WaitForChild("Events")
 end
 
 function AdamNetwork.newEvent(EventName : string)
 	if RunService:IsServer() then
 		local RemoteEvent = Instance.new("RemoteEvent")
 		RemoteEvent.Name = EventName
-		RemoteEvent.Parent = EventsFolder
+		RemoteEvent.Parent = Events
 		
 		return RemoteEvent
 	end
@@ -81,27 +80,27 @@ function AdamNetwork.newFunction(FunctionName : string)
 	if RunService:IsServer() then
 		local RemoteFunction = Instance.new("RemoteFunction")
 		RemoteFunction.Name = FunctionName
-		RemoteFunction.Parent = FunctionsFolder
+		RemoteFunction.Parent = Functions
 		
 		return RemoteFunction
 	end
 end
 
 function AdamNetwork:GetEvent(EventName : string)
-	if EventsFolder then
-		return EventsFolder:FindFirstChild(EventName)
+	if Events then
+		return Events:FindFirstChild(EventName)
 	end
 end
 
 function AdamNetwork:GetFunction(FunctionName : string)
-	if FunctionsFolder then
-		return FunctionsFolder:FindFirstChild(FunctionName)
+	if Functions then
+		return Functions:FindFirstChild(FunctionName)
 	end
 end
 
 function AdamNetwork:FireEvent(EventName : string, ...)
-	if EventsFolder:FindFirstChild(EventName) then
-		local Event = EventsFolder[EventName]
+	if Events:FindFirstChild(EventName) then
+		local Event = Events[EventName]
 		
 		if RunService:IsServer() then
 			Event:FireServer(...)
@@ -112,8 +111,8 @@ function AdamNetwork:FireEvent(EventName : string, ...)
 end
 
 function AdamNetwork:InvokeFunction(FunctionName : string, ...)
-	if FunctionsFolder:FindFirstChild(FunctionName) then
-		local RemoteFunction = FunctionsFolder[FunctionName]
+	if Functions:FindFirstChild(FunctionName) then
+		local RemoteFunction = Functions[FunctionName]
 		
 		if RunService:IsServer() then
 			RemoteFunction:InvokeServer(...)
@@ -124,8 +123,8 @@ function AdamNetwork:InvokeFunction(FunctionName : string, ...)
 end
 
 function AdamNetwork:BindEvent(EventName : string, Function)
-	if EventsFolder:FindFirstChild(EventName) then
-		local Event = EventsFolder[EventName]
+	if Events:FindFirstChild(EventName) then
+		local Event = Events[EventName]
 		
 		if RunService:IsServer() then
 			Event.OnServerEvent:Connect(Function)
@@ -136,8 +135,8 @@ function AdamNetwork:BindEvent(EventName : string, Function)
 end
 
 function AdamNetwork:BindFunction(FunctionName : string, Function)
-	if FunctionsFolder:FindFirstChild(FunctionName) then
-		local RemoteFunction = FunctionsFolder[FunctionName]
+	if Functions:FindFirstChild(FunctionName) then
+		local RemoteFunction = Functions[FunctionName]
 
 		if RunService:IsServer() then
 			RemoteFunction.OnServerInvoke = Function
