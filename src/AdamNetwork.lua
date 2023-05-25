@@ -50,11 +50,9 @@ local RunService = game:GetService("RunService")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local IsServer = RunService:IsServer()
-
 local Communication, FunctionsFolder, EventsFolder
 
-if IsServer then
+if RunService:IsServer() then
 	Communication = Instance.new("Folder",ReplicatedStorage)
 	Communication.Name = "Communication"
 	
